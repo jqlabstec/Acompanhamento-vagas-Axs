@@ -57,7 +57,7 @@
         
         <!-- Cabeçalho -->
         <header class="text-center mb-8 p-4 header-green rounded-lg shadow">
-            <h1 class="text-2xl md:text-3xl font-bold ">Status das Vagas Axs Energia - Expansão</h1>
+            <h1 class="text-2xl md:text-3xl font-bold ">Status das Vagas Axs Energia + Guerrilha Pré</h1>
         </header>
 
         <!-- Seção de Upload -->
@@ -126,15 +126,21 @@
              <!-- Seção de Filtros -->
             <section id="filter-section" class="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
-                    <label for="uf-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por UF</label>
-                    <select id="uf-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="all">Todas as UFs</option>
+                    <label for="operacao-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Operacao</label>
+                    <select id="operacao-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="all">Todos as Operações</option>
                     </select>
-                </div>
+                </div>            
                 <div class="flex-1">
                     <label for="cargo-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Cargo</label>
                     <select id="cargo-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="all">Todos os Cargos</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label for="uf-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por UF</label>
+                    <select id="uf-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="all">Todas as UFs</option>
                     </select>
                 </div>
             </section>
@@ -148,6 +154,7 @@
                     <table class="w-full text-left">
                         <thead class="table-header-green uppercase text-sm">
                             <tr>
+                                <th class="p-3">OPERAÇÃO</th>
                                 <th class="p-3">UF</th>
                                 <th class="p-3 text-center">Cargo</th>
                                 <th class="p-3 text-center">Orçado</th>
@@ -190,6 +197,7 @@
         const errorMessage = document.getElementById('error-message');
         const ufFilter = document.getElementById('uf-filter');
         const cargoFilter = document.getElementById('cargo-filter');
+        const operacaoFilter = document.getElementById('operacao-filter')
 
         let originalData = [];
 
@@ -215,6 +223,7 @@
 
         ufFilter.addEventListener('change', applyFilters);
         cargoFilter.addEventListener('change', applyFilters);
+        operacaoFilter.addEventListener('change', applyFilters)
 
         function parseCSV(file) {
             Papa.parse(file, {
@@ -270,36 +279,69 @@
 function populateFilters(data) {
     const ufs = [...new Set(data.map(item => item.UF).filter(Boolean))].sort();
     const cargos = [...new Set(data.map(item => item.CARGO).filter(Boolean))].sort();
+    const operacoes = [...new Set(data.map(item => item.OPERAÇÃO).filter(Boolean))].sort();
 
-    // Corrigido: preenchendo o filtro de UF com UFs
+    // Preenchendo os filtros de UF, Cargo e Operação
     ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
     ufs.forEach(uf => {
         ufFilter.innerHTML += `<option value="${uf}">${uf}</option>`;
     });
 
-    // Correto: preenchendo o filtro de Cargo com Cargos
     cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
     cargos.forEach(cargo => {
         cargoFilter.innerHTML += `<option value="${cargo}">${cargo}</option>`;
     });
+
+    operacaoFilter.innerHTML = '<option value="all">Todas as Operações</option>';
+    operacoes.forEach(operacao => {
+        operacaoFilter.innerHTML += `<option value="${operacao}">${operacao}</option>`;
+    });
+
+    // Filtrar as UFs e Cargos ao selecionar uma Operação
+    operacaoFilter.addEventListener('change', function() {
+        const selectedOperacao = operacaoFilter.value;
+        const filteredData = selectedOperacao === 'all' ? data : data.filter(item => item.OPERAÇÃO === selectedOperacao);
+
+        // Atualizar filtros de UF e Cargo com base na operação selecionada
+        updateUFAndCargoFilters(filteredData);
+    });
 }
 
-        function applyFilters() {
-            const selectedUf = ufFilter.value;
-            const selectedCargo = cargoFilter.value;
+function updateUFAndCargoFilters(filteredData) {
+    const filteredUfs = [...new Set(filteredData.map(item => item.UF).filter(Boolean))].sort();
+    ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
+    filteredUfs.forEach(uf => {
+        ufFilter.innerHTML += `<option value="${uf}">${uf}</option>`;
+    });
 
-            let filteredData = originalData;
+    const filteredCargos = [...new Set(filteredData.map(item => item.CARGO).filter(Boolean))].sort();
+    cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
+    filteredCargos.forEach(cargo => {
+        cargoFilter.innerHTML += `<option value="${cargo}">${cargo}</option>`;
+    });
+}
 
-            if (selectedUf !== 'all') {
-                filteredData = filteredData.filter(row => row.UF === selectedUf);
-            }
+function applyFilters() {
+    const selectedUf = ufFilter.value;
+    const selectedCargo = cargoFilter.value;
+    const selectedOperacao = operacaoFilter.value;
 
-            if (selectedCargo !== 'all') {
-                filteredData = filteredData.filter(row => row.CARGO === selectedCargo);
-            }
+    let filteredData = originalData;
 
-            updateDashboard(filteredData);
-        }
+    if (selectedUf !== 'all') {
+        filteredData = filteredData.filter(row => row.UF === selectedUf);
+    }
+
+    if (selectedCargo !== 'all') {
+        filteredData = filteredData.filter(row => row.CARGO === selectedCargo);
+    }
+
+    if (selectedOperacao !== 'all') {
+        filteredData = filteredData.filter(row => row.OPERAÇÃO === selectedOperacao);
+    }
+
+    updateDashboard(filteredData);
+}
 
         function updateDashboard(dataToRender) {
             // --- 1. Calcular KPIs ---
@@ -324,6 +366,8 @@ function populateFilters(data) {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50';
                 tr.innerHTML = `
+
+                    <td class="p-3 font-medium">${row.OPERAÇÃO || 'N/A'}</td>
                     <td class="p-3 font-medium">${row.UF || 'N/A'}</td>
                     <td class="p-3 text-center">${row.CARGO || 'N/A'}</td>
                     <td class="p-3 text-center">${row.ORÇADO || 'N/A'}</td>

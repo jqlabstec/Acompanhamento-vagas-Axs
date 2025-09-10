@@ -1,434 +1,499 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Status de Vagas</title>
-    <!-- Tailwind CSS para estilização rápida e moderna -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PapaParse para ler arquivos CSV -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
-    <!-- SheetJS (xlsx) para ler arquivos Excel (.xlsx, .xls) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Cor de fundo cinza claro */
-        }
-        /* Estilo para o botão de upload de arquivo */
-        .custom-file-upload {
-            border: 2px dashed #93c5fd;
-            display: inline-block;
-            padding: 1rem 2rem;
-            cursor: pointer;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            background-color: #dbeafe;
-        }
-        .custom-file-upload:hover {
-            background-color: #bfdbfe;
-            border-color: #60a5fa;
-        }
-        /* Ocultar o input de arquivo padrão */
-        input[type="file"] {
-            display: none;
-        }
-        /* Animação de fade-in para o painel */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Paleta de cores da imagem */
-        .header-green { background-color: #5a4ac7;  color: white !important;}
-        .header-purple { background-color: #d9d2e9; }
-        .table-header-green { background: linear-gradient(to right, #249788, #5a4ac7); color: white; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Status de Vagas</title>
+  <!-- Tailwind CSS para estilização rápida e moderna -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- PapaParse para ler arquivos CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.2/papaparse.min.js"></script>
+  <!-- SheetJS (xlsx) para ler arquivos Excel (.xlsx, .xls) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      /* Cor de fundo cinza claro */
+    }
+
+    /* Estilo para o botão de upload de arquivo */
+    .custom-file-upload {
+      border: 2px dashed #93c5fd;
+      display: inline-block;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      background-color: #dbeafe;
+    }
+
+    .custom-file-upload:hover {
+      background-color: #bfdbfe;
+      border-color: #60a5fa;
+    }
+
+    /* Ocultar o input de arquivo padrão */
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Animação de fade-in para o painel */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Paleta de cores da imagem */
+    .header-green {
+      background-color: #5a4ac7;
+      color: white !important;
+    }
+
+    .header-purple {
+      background-color: #d9d2e9;
+    }
+
+    .table-header-green {
+      background: linear-gradient(to right, #249788, #5a4ac7);
+      color: white;
+    }
+  </style>
 </head>
+
 <body class="text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8">
-        
-        <!-- Cabeçalho -->
-        <header class="text-center mb-8 p-4 header-green rounded-lg shadow">
-            <h1 class="text-2xl md:text-3xl font-bold ">Status das Vagas Axs Energia + Guerrilha Pré</h1>
-        </header>
+  <div class="container mx-auto p-4 md:p-8">
 
-        <!-- Seção de Upload -->
-        <div id="upload-section" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md text-center">
-             <label for="file-upload" class="custom-file-upload text-blue-800">
-                <svg class="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V16a4 4 0 01-4 4H7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9l4-4-4 4z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h10M14 16h2m-5-4h5"></path></svg>
-                <span class="font-semibold text-lg" id="upload-label">Clique para selecionar a planilha</span>
-            </label>
-            <input type="file" id="file-upload" accept=".csv, .xlsx, .xls">
-            <p class="text-gray-500 mt-2 text-sm">Suporta arquivos .xlsx, .xls e .csv</p>
-            <p id="error-message" class="text-red-500 mt-4 font-semibold"></p>
-        </div>
+    <!-- Cabeçalho -->
+    <header class="text-center mb-8 p-4 header-green rounded-lg shadow">
+      <h1 class="text-2xl md:text-3xl font-bold ">Status das Vagas Axs Energia + Guerrilha Pré</h1>
+    </header>
 
-        <!-- Seção do Painel (Dashboard) -->
-        <main id="dashboard-section" class="hidden mt-8 fade-in space-y-8">
-            
-            <!-- Cards de Resumo (KPIs) -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                                <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                     <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Orçado</p>
-                        <p id="total-orçado" class="text-2xl font-bold">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                     <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total de Ativos</p>
-                        <p id="total-ativos" class="text-2xl font-bold">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                    <div class="bg-yellow-100 text-yellow-600 rounded-full p-3 mr-4">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total em Andamento</p>
-                        <p id="total-andamento" class="text-2xl font-bold">0</p>
-                    </div>
-                </div>
-                 <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                    <div class="bg-red-100 text-red-600 rounded-full p-3 mr-4">
-                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total de Desligamentos</p>
-                        <p id="total-desligues" class="text-2xl font-bold">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                   <div class="bg-purple-100 text-purple-600 rounded-full p-3 mr-4">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total de Desistentes</p>
-                        <p id="total-desistentes" class="text-2xl font-bold">0</p>
-                    </div>
-                </div>
-            </section>
-
-             <!-- Seção de Filtros -->
-            <section id="filter-section" class="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row gap-4">
-                <div class="flex-1">
-                    <label for="operacao-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Operacao</label>
-                    <select id="operacao-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="all">Todos as Operações</option>
-                    </select>
-                </div>            
-                <div class="flex-1">
-                    <label for="cargo-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Cargo</label>
-                    <select id="cargo-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="all">Todos os Cargos</option>
-                    </select>
-                </div>
-                <div class="flex-1">
-                    <label for="uf-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por UF</label>
-                    <select id="uf-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="all">Todas as UFs</option>
-                    </select>
-                </div>
-            </section>
-            
-            <!-- Tabela Detalhada -->
-            <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-                 <div class="header-purple p-2 mb-4 rounded-md">
-                    <h2 class="text-xl font-bold text-center text-gray-700">Geral</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="table-header-green uppercase text-sm">
-                            <tr>
-                                <th class="p-3">OPERAÇÃO</th>
-                                <th class="p-3">UF</th>
-                                <th class="p-3 text-center">Cargo</th>
-                                <th class="p-3 text-center">Orçado</th>
-                                <th class="p-3 text-center">Ativos</th>
-                                <th class="p-3 text-center">Desligues</th>
-                                <th class="p-3 text-center">Vagas Open Mapa</th>
-                                <th class="p-3 text-center">Em Andamento</th>
-                                <th class="p-3 text-center">Desistentes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vagas-table-body" class="divide-y divide-gray-200">
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Tabela de Admissões Programadas -->
-            <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-                <div class="header-purple p-2 mb-4 rounded-md">
-                    <h2 class="text-xl font-bold text-center text-gray-700">Admissões Programadas</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead id="admissions-table-head" class="table-header-green uppercase text-sm">
-                        </thead>
-                        <tbody id="admissions-table-body" class="divide-y divide-gray-200">
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
+    <!-- Seção de Upload -->
+    <div id="upload-section" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md text-center">
+      <label for="file-upload" class="custom-file-upload text-blue-800">
+          <svg class="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V16a4 4 0 01-4 4H7z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9l4-4-4 4z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h10M14 16h2m-5-4h5"></path>
+        </svg>
+        <span class="font-semibold text-lg" id="upload-label">Clique para selecionar a planilha</span>
+      </label>
+      <input type="file" id="file-upload" accept=".csv, .xlsx, .xls">
+      <p class="text-gray-500 mt-2 text-sm">Suporta arquivos .xlsx, .xls e .csv</p>
+      <p id="error-message" class="text-red-500 mt-4 font-semibold"></p>
     </div>
 
-    <script>
-        const fileInput = document.getElementById('file-upload');
-        const uploadSection = document.getElementById('upload-section');
-        const dashboardSection = document.getElementById('dashboard-section');
-        const uploadLabel = document.getElementById('upload-label');
-        const errorMessage = document.getElementById('error-message');
-        const ufFilter = document.getElementById('uf-filter');
-        const cargoFilter = document.getElementById('cargo-filter');
-        const operacaoFilter = document.getElementById('operacao-filter')
-
-        let originalData = [];
-
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const allowedExtensions = /(\.csv|\.xlsx|\.xls)$/i;
-            if (!allowedExtensions.exec(file.name)) {
-                handleParseError('Erro: Por favor, selecione um arquivo no formato CSV ou XLSX.');
-                return;
-            }
-            
-            uploadLabel.textContent = `Analisando: ${file.name}`;
-            errorMessage.textContent = '';
-
-            if (file.name.endsWith('.csv')) {
-                parseCSV(file);
-            } else {
-                parseXLSX(file);
-            }
-        });
-
-        ufFilter.addEventListener('change', applyFilters);
-        cargoFilter.addEventListener('change', applyFilters);
-        operacaoFilter.addEventListener('change', applyFilters)
-
-        function parseCSV(file) {
-            Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => setupDashboard(results.data),
-                error: (error) => handleParseError('Ocorreu um erro ao ler o arquivo CSV.')
-            });
-        }
-
-        function parseXLSX(file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const data = new Uint8Array(event.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                    setupDashboard(jsonData);
-                } catch (error) {
-                    handleParseError('Ocorreu um erro ao processar o arquivo Excel.');
-                }
-            };
-            reader.onerror = () => handleParseError('Não foi possível ler o arquivo.');
-            reader.readAsArrayBuffer(file);
-        }
-
-        function handleParseError(message) {
-            console.error(message);
-            errorMessage.textContent = message;
-            uploadLabel.textContent = 'Clique para selecionar a planilha';
-            fileInput.value = '';
-        }
+    <!-- Seção do Painel (Dashboard) -->
+    <main id="dashboard-section" class="hidden mt-8 fade-in space-y-8">
         
-        function setupDashboard(data) {
-             if (!data || data.length === 0 || !data[0].hasOwnProperty('ATIVOS')) {
-                 handleParseError('Arquivo inválido ou coluna essencial "ATIVOS" não encontrada.');
-                 return;
-            }
-            originalData = data;
-            
-            // Popula os filtros com valores únicos da planilha
-            populateFilters(data);
+        <!-- Cards de Resumo (KPIs) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+                <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Orçado</p>
+                    <p id="total-orçado" class="text-2xl font-bold">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+                <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total de Ativos</p>
+                    <p id="total-ativos" class="text-2xl font-bold">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+              <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Fte Total</p>
+                <p id="total-fte" class="text-2xl font-bold">0</p>
+              </div>
+            </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-yellow-100 text-yellow-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total em Andamento</p>
+            <p id="total-andamento" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-red-100 text-red-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total de Desligamentos</p>
+            <p id="total-desligues" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-purple-100 text-purple-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total de Desistentes</p>
+            <p id="total-desistentes" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+      </section>
 
-            // Renderiza o painel com todos os dados inicialmente
-            updateDashboard(data);
+      <!-- Seção de Filtros -->
+      <section id="filter-section" class="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <label for="operacao-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Operacao</label>
+          <select id="operacao-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="all">Todos as Operações</option>
+          </select>
+        </div>
+        <div class="flex-1">
+          <label for="cargo-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Cargo</label>
+          <select id="cargo-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="all">Todos os Cargos</option>
+          </select>
+        </div>
+        <div class="flex-1">
+          <label for="uf-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por UF</label>
+          <select id="uf-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="all">Todas as UFs</option>
+          </select>
+        </div>
+      </section>
 
-            uploadSection.classList.add('hidden');
-            dashboardSection.classList.remove('hidden');
+      <!-- Tabela Detalhada -->
+      <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div class="header-purple p-2 mb-4 rounded-md">
+          <h2 class="text-xl font-bold text-center text-gray-700">Geral</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="table-header-green uppercase text-sm">
+              <tr>
+                <th class="p-3">OPERAÇÃO</th>
+                <th class="p-3">UF</th>
+                <th class="p-3 text-center">Cargo</th>
+                <th class="p-3 text-center">Orçado</th>
+                <th class="p-3 text-center">Ativos</th>
+                <th class="p-3 text-center">FTE</th>
+                <th class="p-3 text-center">Desligues</th>
+                <th class="p-3 text-center">Vagas Open Mapa</th>
+                <th class="p-3 text-center">Em Andamento</th>
+                <th class="p-3 text-center">Desistentes</th>
+              </tr>
+            </thead>
+            <tbody id="vagas-table-body" class="divide-y divide-gray-200">
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tabela de Admissões Programadas -->
+      <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div class="header-purple p-2 mb-4 rounded-md">
+          <h2 class="text-xl font-bold text-center text-gray-700">Admissões Programadas</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead id="admissions-table-head" class="table-header-green uppercase text-sm">
+            </thead>
+            <tbody id="admissions-table-body" class="divide-y divide-gray-200">
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file-upload');
+    const uploadSection = document.getElementById('upload-section');
+    const dashboardSection = document.getElementById('dashboard-section');
+    const uploadLabel = document.getElementById('upload-label');
+    const errorMessage = document.getElementById('error-message');
+    const ufFilter = document.getElementById('uf-filter');
+    const cargoFilter = document.getElementById('cargo-filter');
+    const operacaoFilter = document.getElementById('operacao-filter')
+
+    let originalData = [];
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const allowedExtensions = /(\.csv|\.xlsx|\.xls)$/i;
+      if (!allowedExtensions.exec(file.name)) {
+        handleParseError('Erro: Por favor, selecione um arquivo no formato CSV ou XLSX.');
+        return;
+      }
+
+      uploadLabel.textContent = `Analisando: ${file.name}`;
+      errorMessage.textContent = '';
+
+      if (file.name.endsWith('.csv')) {
+        parseCSV(file);
+      } else {
+        parseXLSX(file);
+      }
+    });
+
+    ufFilter.addEventListener('change', applyFilters);
+    cargoFilter.addEventListener('change', applyFilters);
+    operacaoFilter.addEventListener('change', applyFilters)
+
+    function parseCSV(file) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => setupDashboard(results.data),
+        error: (error) => handleParseError('Ocorreu um erro ao ler o arquivo CSV.')
+      });
+    }
+
+    function parseXLSX(file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = new Uint8Array(event.target.result);
+          const workbook = XLSX.read(data, {
+            type: 'array'
+          });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          setupDashboard(jsonData);
+        } catch (error) {
+          handleParseError('Ocorreu um erro ao processar o arquivo Excel.');
         }
+      };
+      reader.onerror = () => handleParseError('Não foi possível ler o arquivo.');
+      reader.readAsArrayBuffer(file);
+    }
 
-function populateFilters(data) {
-    const ufs = [...new Set(data.map(item => item.UF).filter(Boolean))].sort();
-    const cargos = [...new Set(data.map(item => item.CARGO).filter(Boolean))].sort();
-    const operacoes = [...new Set(data.map(item => item.OPERAÇÃO).filter(Boolean))].sort();
+    function handleParseError(message) {
+      console.error(message);
+      errorMessage.textContent = message;
+      uploadLabel.textContent = 'Clique para selecionar a planilha';
+      fileInput.value = '';
+    }
 
-    // Preenchendo os filtros de UF, Cargo e Operação
-    ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
-    ufs.forEach(uf => {
+    function setupDashboard(data) {
+      if (!data || data.length === 0 || !data[0].hasOwnProperty('ATIVOS')) {
+        handleParseError('Arquivo inválido ou coluna essencial "ATIVOS" não encontrada.');
+        return;
+      }
+      originalData = data;
+
+      // Popula os filtros com valores únicos da planilha
+      populateFilters(data);
+
+      // Renderiza o painel com todos os dados inicialmente
+      updateDashboard(data);
+
+      uploadSection.classList.add('hidden');
+      dashboardSection.classList.remove('hidden');
+    }
+
+    function populateFilters(data) {
+      const ufs = [...new Set(data.map(item => item.UF).filter(Boolean))].sort();
+      const cargos = [...new Set(data.map(item => item.CARGO).filter(Boolean))].sort();
+      const operacoes = [...new Set(data.map(item => item.OPERAÇÃO).filter(Boolean))].sort();
+
+      // Preenchendo os filtros de UF, Cargo e Operação
+      ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
+      ufs.forEach(uf => {
         ufFilter.innerHTML += `<option value="${uf}">${uf}</option>`;
-    });
+      });
 
-    cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
-    cargos.forEach(cargo => {
+      cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
+      cargos.forEach(cargo => {
         cargoFilter.innerHTML += `<option value="${cargo}">${cargo}</option>`;
-    });
+      });
 
-    operacaoFilter.innerHTML = '<option value="all">Todas as Operações</option>';
-    operacoes.forEach(operacao => {
+      operacaoFilter.innerHTML = '<option value="all">Todas as Operações</option>';
+      operacoes.forEach(operacao => {
         operacaoFilter.innerHTML += `<option value="${operacao}">${operacao}</option>`;
-    });
+      });
 
-    // Filtrar as UFs e Cargos ao selecionar uma Operação
-    operacaoFilter.addEventListener('change', function() {
+      // Filtrar as UFs e Cargos ao selecionar uma Operação
+      operacaoFilter.addEventListener('change', function() {
         const selectedOperacao = operacaoFilter.value;
         const filteredData = selectedOperacao === 'all' ? data : data.filter(item => item.OPERAÇÃO === selectedOperacao);
 
         // Atualizar filtros de UF e Cargo com base na operação selecionada
         updateUFAndCargoFilters(filteredData);
-    });
-}
-
-function updateUFAndCargoFilters(filteredData) {
-    const filteredUfs = [...new Set(filteredData.map(item => item.UF).filter(Boolean))].sort();
-    ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
-    filteredUfs.forEach(uf => {
-        ufFilter.innerHTML += `<option value="${uf}">${uf}</option>`;
-    });
-
-    const filteredCargos = [...new Set(filteredData.map(item => item.CARGO).filter(Boolean))].sort();
-    cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
-    filteredCargos.forEach(cargo => {
-        cargoFilter.innerHTML += `<option value="${cargo}">${cargo}</option>`;
-    });
-}
-
-function applyFilters() {
-    const selectedUf = ufFilter.value;
-    const selectedCargo = cargoFilter.value;
-    const selectedOperacao = operacaoFilter.value;
-
-    let filteredData = originalData;
-
-    if (selectedUf !== 'all') {
-        filteredData = filteredData.filter(row => row.UF === selectedUf);
-    }
-
-    if (selectedCargo !== 'all') {
-        filteredData = filteredData.filter(row => row.CARGO === selectedCargo);
-    }
-
-    if (selectedOperacao !== 'all') {
-        filteredData = filteredData.filter(row => row.OPERAÇÃO === selectedOperacao);
-    }
-
-    updateDashboard(filteredData);
-}
-
-        function updateDashboard(dataToRender) {
-            // --- 1. Calcular KPIs ---
-            let totalOrcado = 0, totalAtivos = 0, totalAndamento = 0, totalDesligues = 0, totalDesistentes = 0;
-            dataToRender.forEach(row => {
-                totalOrcado += parseInt(row['ORÇADO'], 10) || 0;
-                totalAtivos += parseInt(row['ATIVOS'], 10) || 0;
-                totalAndamento += parseInt(row['Total Em Andamento'], 10) || 0;
-                totalDesligues += parseInt(row['DESLIGUES'], 10) || 0;
-                totalDesistentes += parseInt(row['Desistentes'], 10) || 0;
-            });
-            document.getElementById('total-orçado').textContent = totalOrcado;
-            document.getElementById('total-ativos').textContent = totalAtivos;
-            document.getElementById('total-andamento').textContent = totalAndamento;
-            document.getElementById('total-desligues').textContent = totalDesligues;
-            document.getElementById('total-desistentes').textContent = totalDesistentes;
-
-            // --- 2. Preencher a tabela de Detalhes ---
-            const vagasTableBody = document.getElementById('vagas-table-body');
-            vagasTableBody.innerHTML = ''; 
-            dataToRender.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50';
-                tr.innerHTML = `
-
-                    <td class="p-3 font-medium">${row.OPERAÇÃO || 'N/A'}</td>
-                    <td class="p-3 font-medium">${row.UF || 'N/A'}</td>
-                    <td class="p-3 text-center">${row.CARGO || 'N/A'}</td>
-                    <td class="p-3 text-center">${row.ORÇADO || 'N/A'}</td>
-                    <td class="p-3 text-center">${row.ATIVOS || 0}</td>
-                    <td class="p-3 text-center">${row.DESLIGUES || 0}</td>
-                    <td class="p-3 text-center">${row['Vagas Open Mapa'] || 0}</td>
-                    <td class="p-3 text-center">${row['Total Em Andamento'] || 0}</td>
-                    <td class="p-3 text-center">${row.Desistentes || 0}</td>
-                `;
-                vagasTableBody.appendChild(tr);
-            });
-            
-            // --- 3. Preencher a tabela de Admissões Programadas ---
-            const admissionsHead = document.getElementById('admissions-table-head');
-            const admissionsBody = document.getElementById('admissions-table-body');
-            admissionsHead.innerHTML = '';
-            admissionsBody.innerHTML = '';
-
-            if (originalData.length === 0) return; // Não faz nada se não houver dados
-            const dateRegex = /^\d{1,2}\/\d{1,2}$/;
-            const allKeys = Object.keys(originalData[0]);
-            const dateColumns = allKeys.filter(key => dateRegex.test(key));
-
-            if (dateColumns.length > 0) {
-                const headerRow = document.createElement('tr');
-                let headerHTML = `<th class="p-3">UF</th><th class="p-3">Cargo</th>`;
-                dateColumns.forEach(date => {
-                    headerHTML += `<th class="p-3 text-center">${date}</th>`;
-                });
-                headerRow.innerHTML = headerHTML;
-                admissionsHead.appendChild(headerRow);
-
-                dataToRender.forEach(row => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50';
-                    let rowHTML = `<td class="p-3 font-medium">${row.UF || 'N/A'}</td><td class="p-3">${row.CARGO || 'N/A'}</td>`;
-                    dateColumns.forEach(date => {
-                        const value = parseInt(row[date], 10) || 0;
-                        rowHTML += `<td class="p-3 text-center ${value > 0 ? 'font-bold text-green-600' : ''}">${value}</td>`;
-                    });
-                    tr.innerHTML = rowHTML;
-                    admissionsBody.appendChild(tr);
-                });
-            } else {
-                 admissionsBody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-gray-500">Nenhuma data de admissão encontrada na planilha.</td></tr>';
-            }
-        }
-          window.addEventListener('DOMContentLoaded', () => {
-    fetch('dados.json')
-      .then(response => {
-        if (!response.ok) throw new Error("Não foi possível carregar dados.json");
-        return response.json();
-      })
-      .then(data => {
-        setupDashboard(data);
-      })
-      .catch(err => {
-        console.warn("dados.json não encontrado ou inválido:", err.message);
       });
-  });
-    </script>
-</body>
-</html>
+    }
 
+    function updateUFAndCargoFilters(filteredData) {
+      const filteredUfs = [...new Set(filteredData.map(item => item.UF).filter(Boolean))].sort();
+      ufFilter.innerHTML = '<option value="all">Todas as UFs</option>';
+      filteredUfs.forEach(uf => {
+        ufFilter.innerHTML += `<option value="${uf}">${uf}</option>`;
+      });
+
+      const filteredCargos = [...new Set(filteredData.map(item => item.CARGO).filter(Boolean))].sort();
+      cargoFilter.innerHTML = '<option value="all">Todos os Cargos</option>';
+      filteredCargos.forEach(cargo => {
+        cargoFilter.innerHTML += `<option value="${cargo}">${cargo}</option>`;
+      });
+    }
+
+    function applyFilters() {
+      const selectedUf = ufFilter.value;
+      const selectedCargo = cargoFilter.value;
+      const selectedOperacao = operacaoFilter.value;
+
+      let filteredData = originalData;
+
+      if (selectedUf !== 'all') {
+        filteredData = filteredData.filter(row => row.UF === selectedUf);
+      }
+
+      if (selectedCargo !== 'all') {
+        filteredData = filteredData.filter(row => row.CARGO === selectedCargo);
+      }
+
+      if (selectedOperacao !== 'all') {
+        filteredData = filteredData.filter(row => row.OPERAÇÃO === selectedOperacao);
+      }
+
+      updateDashboard(filteredData);
+    }
+
+    function updateDashboard(dataToRender) {
+  // --- 1. Calcular KPIs ---
+  let totalOrcado = 0,
+      totalAtivos = 0,
+      totalAndamento = 0,
+      totalDesligues = 0,
+      totalDesistentes = 0;
+  let totalFtes = 0;
+
+  dataToRender.forEach(row => {
+    totalOrcado += parseInt(row['ORÇADO'], 10) || 0;
+    totalAtivos += parseInt(row['ATIVOS'], 10) || 0;
+    totalAndamento += parseInt(row['Total Em Andamento'], 10) || 0;
+    totalDesligues += parseInt(row['DESLIGUES'], 10) || 0;
+    totalDesistentes += parseInt(row['Desistentes'], 10) || 0;
+    totalFtes += parseFloat(row['FTE'] || 0);  // Valor com arredondamento no momento da exibição
+  });
+
+  // Exibir no painel com 2 casas decimais
+  document.getElementById('total-orçado').textContent = totalOrcado.toFixed(0);  // Inteiro
+  document.getElementById('total-ativos').textContent = totalAtivos.toFixed(0);    // Inteiro
+  document.getElementById('total-andamento').textContent = totalAndamento.toFixed(0); // Inteiro
+  document.getElementById('total-desligues').textContent = totalDesligues.toFixed(0); // Inteiro
+  document.getElementById('total-desistentes').textContent = totalDesistentes.toFixed(0); // Inteiro
+  document.getElementById('total-fte').textContent = totalFtes.toFixed(2);  // 2 casas decimais para FTE
+
+  // --- 2. Preencher a tabela de Detalhes ---
+  const vagasTableBody = document.getElementById('vagas-table-body');
+  vagasTableBody.innerHTML = '';
+
+  dataToRender.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-gray-50';
+    tr.innerHTML = `
+      <td class="p-3 font-medium">${row.OPERAÇÃO || 'N/A'}</td>
+      <td class="p-3 font-medium">${row.UF || 'N/A'}</td>
+      <td class="p-3 text-center">${row.CARGO || 'N/A'}</td>
+      <td class="p-3 text-center">${row.ORÇADO || 'N/A'}</td>
+      <td class="p-3 text-center">${row.ATIVOS || 0}</td>
+      <td class="p-3 text-center">${(parseFloat(row.FTE) || 0).toFixed(2)}</td>
+      <td class="p-3 text-center">${row.DESLIGUES || 0}</td>
+      <td class="p-3 text-center">${row['Vagas Open Mapa'] || 0}</td>
+      <td class="p-3 text-center">${row['Total Em Andamento'] || 0}</td>
+      <td class="p-3 text-center">${row.Desistentes || 0}</td>
+    `;
+    vagasTableBody.appendChild(tr);
+  });
+
+      // --- 3. Preencher a tabela de Admissões Programadas ---
+      const admissionsHead = document.getElementById('admissions-table-head');
+      const admissionsBody = document.getElementById('admissions-table-body');
+      admissionsHead.innerHTML = '';
+      admissionsBody.innerHTML = '';
+
+      if (originalData.length === 0) return; // Não faz nada se não houver dados
+      const dateRegex = /^\d{1,2}\/\d{1,2}$/;
+      const allKeys = Object.keys(originalData[0]);
+      const dateColumns = allKeys.filter(key => dateRegex.test(key));
+
+      if (dateColumns.length > 0) {
+        const headerRow = document.createElement('tr');
+        let headerHTML = `<th class="p-3">UF</th><th class="p-3">Cargo</th>`;
+        dateColumns.forEach(date => {
+          headerHTML += `<th class="p-3 text-center">${date}</th>`;
+        });
+        headerRow.innerHTML = headerHTML;
+        admissionsHead.appendChild(headerRow);
+
+        dataToRender.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-gray-50';
+          let rowHTML = `<td class="p-3 font-medium">${row.UF || 'N/A'}</td><td class="p-3">${row.CARGO || 'N/A'}</td>`;
+          dateColumns.forEach(date => {
+            const value = parseInt(row[date], 10) || 0;
+            rowHTML += `<td class="p-3 text-center ${value > 0 ? 'font-bold text-green-600' : ''}">${value}</td>`;
+          });
+          tr.innerHTML = rowHTML;
+          admissionsBody.appendChild(tr);
+        });
+      } else {
+        admissionsBody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-gray-500">Nenhuma data de admissão encontrada na planilha.</td></tr>';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('dados.json')
+        .then(response => {
+          if (!response.ok) throw new Error("Não foi possível carregar dados.json");
+          return response.json();
+        })
+        .then(data => {
+          setupDashboard(data);
+        })
+        .catch(err => {
+          console.warn("dados.json não encontrado ou inválido:", err.message);
+        });
+    });
+  </script>
+</body>
+
+</html>

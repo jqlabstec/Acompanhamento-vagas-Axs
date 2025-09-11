@@ -89,8 +89,8 @@
     <!-- Seção de Upload -->
     <div id="upload-section" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md text-center">
       <label for="file-upload" class="custom-file-upload text-blue-800">
-          <svg class="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V16a4 4 0 01-4 4H7z"></path>
+        <svg class="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V16a4 4 0 01-4 4H7z"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9l4-4-4 4z"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h10M14 16h2m-5-4h5"></path>
         </svg>
@@ -103,42 +103,42 @@
 
     <!-- Seção do Painel (Dashboard) -->
     <main id="dashboard-section" class="hidden mt-8 fade-in space-y-8">
-        
-        <!-- Cards de Resumo (KPIs) -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Orçado</p>
-                    <p id="total-orçado" class="text-2xl font-bold">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-                <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Total de Ativos</p>
-                    <p id="total-ativos" class="text-2xl font-bold">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
-              <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Fte Total</p>
-                <p id="total-fte" class="text-2xl font-bold">0</p>
-              </div>
-            </div>
+
+      <!-- Cards de Resumo (KPIs) -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6">
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Orçado</p>
+            <p id="total-orçado" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Ativos</p>
+            <p id="total-ativos" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Fte Total</p>
+            <p id="total-fte" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
         <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
           <div class="bg-yellow-100 text-yellow-600 rounded-full p-3 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -146,7 +146,7 @@
             </svg>
           </div>
           <div>
-            <p class="text-sm text-gray-500">Total em Andamento</p>
+            <p class="text-sm text-gray-500">Andamento</p>
             <p id="total-andamento" class="text-2xl font-bold">0</p>
           </div>
         </div>
@@ -157,18 +157,29 @@
             </svg>
           </div>
           <div>
-            <p class="text-sm text-gray-500">Total de Desligamentos</p>
+            <p class="text-sm text-gray-500">Desligamentos</p>
             <p id="total-desligues" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
+          <div class="bg-blue-100 text-blue-600 rounded-full p-3 mr-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Admissões</p>
+            <p id="total-admissoes" class="text-2xl font-bold">0</p>
           </div>
         </div>
         <div class="bg-white p-5 rounded-lg shadow-md flex items-center">
           <div class="bg-purple-100 text-purple-600 rounded-full p-3 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
           </div>
           <div>
-            <p class="text-sm text-gray-500">Total de Desistentes</p>
+            <p class="text-sm text-gray-500">Desistentes</p>
             <p id="total-desistentes" class="text-2xl font-bold">0</p>
           </div>
         </div>
@@ -212,6 +223,7 @@
                 <th class="p-3 text-center">Ativos</th>
                 <th class="p-3 text-center">FTE</th>
                 <th class="p-3 text-center">Desligues</th>
+                <th class="p-3 text-center">Admissões</th>
                 <th class="p-3 text-center">Vagas Open Mapa</th>
                 <th class="p-3 text-center">Em Andamento</th>
                 <th class="p-3 text-center">Desistentes</th>
@@ -398,39 +410,43 @@
     }
 
     function updateDashboard(dataToRender) {
-  // --- 1. Calcular KPIs ---
-  let totalOrcado = 0,
-      totalAtivos = 0,
-      totalAndamento = 0,
-      totalDesligues = 0,
-      totalDesistentes = 0;
-  let totalFtes = 0;
+      // --- 1. Calcular KPIs ---
+      let totalOrcado = 0,
+        totalAtivos = 0,
+        totalAndamento = 0,
+        totalDesligues = 0,
+        totalDesistentes = 0;
+      let totalFtes = 0;
+      let totalAdm = 0;
 
-  dataToRender.forEach(row => {
-    totalOrcado += parseInt(row['ORÇADO'], 10) || 0;
-    totalAtivos += parseInt(row['ATIVOS'], 10) || 0;
-    totalAndamento += parseInt(row['Total Em Andamento'], 10) || 0;
-    totalDesligues += parseInt(row['DESLIGUES'], 10) || 0;
-    totalDesistentes += parseInt(row['Desistentes'], 10) || 0;
-    totalFtes += parseFloat(row['FTE'] || 0);  // Valor com arredondamento no momento da exibição
-  });
+      dataToRender.forEach(row => {
+        totalOrcado += parseInt(row['ORÇADO'], 10) || 0;
+        totalAtivos += parseInt(row['ATIVOS'], 10) || 0;
+        totalAndamento += parseInt(row['Total Em Andamento'], 10) || 0;
+        totalDesligues += parseInt(row['DESLIGUES'], 10) || 0;
+        totalDesistentes += parseInt(row['Desistentes'], 10) || 0;
+        totalFtes += parseFloat(row['FTE'] || 0); // Valor com arredondamento no momento da exibição
+        totalAdm += parseInt(row['ADM M0'], 10) || 0;
+      });
 
-  // Exibir no painel com 2 casas decimais
-  document.getElementById('total-orçado').textContent = totalOrcado.toFixed(0);  // Inteiro
-  document.getElementById('total-ativos').textContent = totalAtivos.toFixed(0);    // Inteiro
-  document.getElementById('total-andamento').textContent = totalAndamento.toFixed(0); // Inteiro
-  document.getElementById('total-desligues').textContent = totalDesligues.toFixed(0); // Inteiro
-  document.getElementById('total-desistentes').textContent = totalDesistentes.toFixed(0); // Inteiro
-  document.getElementById('total-fte').textContent = totalFtes.toFixed(2);  // 2 casas decimais para FTE
+      // Exibir no painel com 2 casas decimais
+      document.getElementById('total-orçado').textContent = totalOrcado.toFixed(0); // Inteiro
+      document.getElementById('total-ativos').textContent = totalAtivos.toFixed(0); // Inteiro
+      document.getElementById('total-andamento').textContent = totalAndamento.toFixed(0); // Inteiro
+      document.getElementById('total-desligues').textContent = totalDesligues.toFixed(0); // Inteiro
+      document.getElementById('total-desistentes').textContent = totalDesistentes.toFixed(0); // Inteiro
+      document.getElementById('total-fte').textContent = totalFtes.toFixed(2); // 2 casas decimais para FTE
+      document.getElementById('total-admissoes').textContent = totalAdm.toFixed(0); // 2 casas decimais para FTE
 
-  // --- 2. Preencher a tabela de Detalhes ---
-  const vagasTableBody = document.getElementById('vagas-table-body');
-  vagasTableBody.innerHTML = '';
 
-  dataToRender.forEach(row => {
-    const tr = document.createElement('tr');
-    tr.className = 'hover:bg-gray-50';
-    tr.innerHTML = `
+      // --- 2. Preencher a tabela de Detalhes ---
+      const vagasTableBody = document.getElementById('vagas-table-body');
+      vagasTableBody.innerHTML = '';
+
+      dataToRender.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50';
+        tr.innerHTML = `
       <td class="p-3 font-medium">${row.OPERAÇÃO || 'N/A'}</td>
       <td class="p-3 font-medium">${row.UF || 'N/A'}</td>
       <td class="p-3 text-center">${row.CARGO || 'N/A'}</td>
@@ -438,12 +454,13 @@
       <td class="p-3 text-center">${row.ATIVOS || 0}</td>
       <td class="p-3 text-center">${(parseFloat(row.FTE) || 0).toFixed(2)}</td>
       <td class="p-3 text-center">${row.DESLIGUES || 0}</td>
+      <td class="p-3 text-center">${row['ADM M0'] || 0}</td>
       <td class="p-3 text-center">${row['Vagas Open Mapa'] || 0}</td>
       <td class="p-3 text-center">${row['Total Em Andamento'] || 0}</td>
       <td class="p-3 text-center">${row.Desistentes || 0}</td>
     `;
-    vagasTableBody.appendChild(tr);
-  });
+        vagasTableBody.appendChild(tr);
+      });
 
       // --- 3. Preencher a tabela de Admissões Programadas ---
       const admissionsHead = document.getElementById('admissions-table-head');
